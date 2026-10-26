@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <PackageId>Flexi.Json</PackageId>
+    <RootNamespace>Flexi.Json</RootNamespace>
+    <AssemblyName>Flexi.Json</AssemblyName>
+    <Description>Dependency-free, Fable-safe, position-aware untyped JSON document API (strict RFC 8259): a JsonValue union you can pattern match, Parse, ToString, source positions and AsInteger()-style accessors. Works under Fable (JS and Python) and Native AOT.</Description>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>Devon Burriss</Authors>
+    <Title>Flexi.Json</Title>
+    <Copyright>Copyright © 2026 Devon Burriss</Copyright>
+    <PackageProjectUrl>https://github.com/dburriss/flexi-json</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dburriss/flexi-json</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>fsharp json parser fable aot</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>First alpha: JsonValue, positions, accessors and builders, extracted from the Fergi project. The package ships its F# sources under fable/ for Fable JS and Python.</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\NUGET.md" Pack="true" PackagePath="README.md" Condition="Exists('..\..\NUGET.md')" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="JsonValue.fs" />
+    <Compile Include="JsonExtensions.fs" />
+    <Compile Include="JsonBuilders.fs" />
+  </ItemGroup>
+  <!-- Fable compiles from source: ship every .fs plus this project file under fable/ -->
+  <ItemGroup>
+    <Content Include="*.fsproj" Pack="true" PackagePath="fable/" />
+    <Content Include="@(Compile)" Pack="true" PackagePath="fable/" />
+  </ItemGroup>
+</Project>

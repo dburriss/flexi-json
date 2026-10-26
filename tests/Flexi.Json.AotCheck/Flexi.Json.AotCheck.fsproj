@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Not packed and not in Flexi.Json.slnx. Publish with:
+       dotnet publish tests/Flexi.Json.AotCheck -c Release -r <rid>
+       and run the result: it must print "AOT check OK" and publish with no trim or AOT warnings.
+       IL2104 and IL3053 are the collapsed warnings for FSharp.Core itself (its printf, reflection and %A
+       code, which nothing here calls; dotnet/fsharp#17324), so they are silenced for this check only.
+       To see the detail, add -p:TrimmerSingleWarn=false: no warning may name Flexi.Json.
+       PublishAot is set here, not with -p:PublishAot=true: a global property would also reach the
+       library's netstandard2.0 target, where the SDK rejects it (NETSDK1207). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <NoWarn>$(NoWarn);IL2104;IL3053</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Flexi.Json/Flexi.Json.fsproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);FS3370;NU1701</NoWarn>
+  </PropertyGroup>
+
+  <!-- Compiled by Fable (`scripts/fable-test.sh`), not by `dotnet test` (it is not in Flexi.Json.slnx):
+       the .NET suite lives in ../Flexi.Json.Tests and these are the very same files, run through
+       tiny xUnit and FsCheck shims. Runner.generated.fs and JsonTestSuite.generated.fs are written by
+       scripts/fable-gen-runner.fsx (run it before building this project).
+       Keep the Compile list in sync with ../Flexi.Json.Tests/Flexi.Json.Tests.fsproj (the generator reads that). -->
+  <ItemGroup>
+    <Compile Include="XunitShim.fs" />
+    <Compile Include="FsCheckShim.fs" />
+    <Compile Include="JsonTestSuite.generated.fs" />
+    <Compile Include="JsonTestSuiteFable.fs" />
+    <Compile Include="../Flexi.Json.Tests/ParserTests.fs" Link="Flexi.Json.Tests/ParserTests.fs" />
+    <Compile Include="../Flexi.Json.Tests/PrinterTests.fs" Link="Flexi.Json.Tests/PrinterTests.fs" />
+    <Compile Include="../Flexi.Json.Tests/AccessorTests.fs" Link="Flexi.Json.Tests/AccessorTests.fs" />
+    <Compile Include="../Flexi.Json.Tests/PositionTests.fs" Link="Flexi.Json.Tests/PositionTests.fs" />
+    <Compile Include="../Flexi.Json.Tests/PropertyTests.fs" Link="Flexi.Json.Tests/PropertyTests.fs" />
+    <Compile Include="Runner.generated.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Flexi.Json/Flexi.Json.fsproj" />
+  </ItemGroup>
+
+</Project>
