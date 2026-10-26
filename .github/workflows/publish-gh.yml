@@ -41,11 +41,23 @@ jobs:
           --output ./artifacts
           -p:Version=${{ steps.version.outputs.version }}
 
+      # Release notes come from CHANGELOG.md: the section for this version, or [Unreleased] when there is
+      # none (scripts/publish.fsx leaves the changelog untouched for prereleases, so their entries stay there).
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          extract() { awk -v h="## [$1]" 'index($0, h) == 1 { on = 1; next } on && /^## \[/ { exit } on' CHANGELOG.md; }
+          notes="$(extract "$version")"
+          if [ -z "$(echo "$notes" | tr -d '[:space:]')" ]; then notes="$(extract Unreleased)"; fi
+          if [ -z "$(echo "$notes" | tr -d '[:space:]')" ]; then echo "No release notes found in CHANGELOG.md" >&2; exit 1; fi
+          printf '%s\n' "$notes" > release-notes.md
+          cat release-notes.md
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
-          generate_release_notes: true
+          body_path: release-notes.md
           files: ./artifacts/*.nupkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
