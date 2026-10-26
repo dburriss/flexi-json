@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-26
+
 ### Added
 
 - First alpha (`0.1.0-alpha.1`): `JsonValue`, extracted from the Fergi project with its namespace renamed from `Fergi.Json` to `Flexi.Json`.

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
@@ -7,7 +7,7 @@
     <RootNamespace>Flexi.Json</RootNamespace>
     <AssemblyName>Flexi.Json</AssemblyName>
     <Description>Dependency-free, Fable-safe, position-aware untyped JSON document API (strict RFC 8259): a JsonValue union you can pattern match, Parse, ToString, source positions and AsInteger()-style accessors. Works under Fable (JS and Python) and Native AOT.</Description>
-    <Version>0.1.0-alpha.1</Version>
+    <Version>0.1.0</Version>
     <Authors>Devon Burriss</Authors>
     <Title>Flexi.Json</Title>
     <Copyright>Copyright © 2026 Devon Burriss</Copyright>
@@ -17,7 +17,14 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>fsharp json parser fable aot</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>First alpha: JsonValue, positions, accessors and builders, extracted from the Fergi project. The package ships its F# sources under fable/ for Fable JS and Python.</PackageReleaseNotes>
+    <PackageReleaseNotes>First alpha (`0.1.0-alpha.1`): `JsonValue`, extracted from the Fergi project with its namespace renamed from `Fergi.Json` to `Flexi.Json`.
+Strict RFC 8259 parser (`Parse`, `TryParse`, `TryParseResult`) with line/column errors and a depth limit.
+Source positions: `ParseWithPositions` / `TryParseWithPositions` return a `Map&lt;string, Span&gt;` keyed by JSON Pointer.
+Compact and pretty printer (`ToString()`, `ToString(true)`).
+`JsonExtensions` accessors (`AsString`, `AsInteger`, `TryGetProperty`, `TryGetPointer`, the `?` operator, ...) and `JsonBuilders` immutable edits.
+Dependency-free, `netstandard2.0` and `net8.0`, Native AOT safe, Fable compatible (JS and Python); the package ships its F# sources under `fable/`.
+Native AOT publish works; the only warnings are FSharp.Core's collapsed IL2104 and IL3053 (dotnet/fsharp#17324), none from this library.
+Tested with the vendored JSON Test Suite and property tests, on .NET and under Fable JS and Python.</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IsAotCompatible>true</IsAotCompatible>
