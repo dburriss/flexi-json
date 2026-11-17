@@ -23,6 +23,11 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
 
+  <!-- Pinned above the SDK's bundled 8.0.31, which has a known Brotli advisory (GHSA-p3jp-9v83-76w9, fixed in 8.0.33). -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="8.0.34" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../src/Flexi.Json/Flexi.Json.fsproj" />
   </ItemGroup>
