@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-17
+
 ### Added
 
 - `JsonParsed`, `JsonValue.ParseWithMetadata` and `JsonValue.TryParseWithMetadata`: return the root, the spans and the original text of every number (`NumberText`, keyed by JSON Pointer), so `1.10`, `1E+2` and integers beyond int64 can be recovered exactly. Existing signatures and behaviour are unchanged.
