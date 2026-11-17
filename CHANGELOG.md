@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-17
+
 ### Fixed
 
 - The packed FSharp.Core dependency is now an explicit 8.0.403 minimum instead of the SDK default (0.2.0 accidentally required 11.0.101).

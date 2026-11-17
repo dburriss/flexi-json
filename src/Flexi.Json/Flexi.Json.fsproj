@@ -7,7 +7,7 @@
     <RootNamespace>Flexi.Json</RootNamespace>
     <AssemblyName>Flexi.Json</AssemblyName>
     <Description>Dependency-free, Fable-safe, position-aware untyped JSON document API (strict RFC 8259): a JsonValue union you can pattern match, Parse, ToString, source positions and AsInteger()-style accessors. Works under Fable (JS and Python) and Native AOT.</Description>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Devon Burriss</Authors>
     <Title>Flexi.Json</Title>
     <Copyright>Copyright © 2026 Devon Burriss</Copyright>
@@ -17,8 +17,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>fsharp json parser fable aot</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>`JsonParsed`, `JsonValue.ParseWithMetadata` and `JsonValue.TryParseWithMetadata`: return the root, the spans and the original text of every number (`NumberText`, keyed by JSON Pointer), so `1.10`, `1E+2` and integers beyond int64 can be recovered exactly. Existing signatures and behaviour are unchanged.
-Targets `netstandard2.0` and `net10.0` instead of `netstandard2.0` and `net8.0`, since .NET 8 went out of support on 2026-11-10. Projects on .NET 8 and 9 use the `netstandard2.0` build.</PackageReleaseNotes>
+    <PackageReleaseNotes>The packed FSharp.Core dependency is now an explicit 8.0.403 minimum instead of the SDK default (0.2.0 accidentally required 11.0.101).</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IsAotCompatible Condition="'$(TargetFramework)' != 'netstandard2.0'">true</IsAotCompatible>
