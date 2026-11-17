@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `JsonParsed`, `JsonValue.ParseWithMetadata` and `JsonValue.TryParseWithMetadata`: return the root, the spans and the original text of every number (`NumberText`, keyed by JSON Pointer), so `1.10`, `1E+2` and integers beyond int64 can be recovered exactly. Existing signatures and behaviour are unchanged.
 
+### Changed
+
+- Targets `netstandard2.0` and `net10.0` instead of `netstandard2.0` and `net8.0`, since .NET 8 went out of support on 2026-11-10. Projects on .NET 8 and 9 use the `netstandard2.0` build.
+
 ## [0.1.0] - 2026-10-26
 
 ### Added

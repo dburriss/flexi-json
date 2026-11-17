@@ -4,7 +4,7 @@ A light, flexible, untyped JSON library for F#, in the shape of `FSharp.Data`'s 
 
 Parse strict RFC 8259 JSON into a discriminated union you can pattern match, read it with
 `AsInteger()`-style accessors, get the source position of every node, and print it back.
-No dependencies beyond FSharp.Core, `netstandard2.0`/`net8.0`, Native AOT safe (no reflection, no printf,
+No dependencies beyond FSharp.Core, `netstandard2.0`/`net10.0`, Native AOT safe (no reflection, no printf,
 no regex), and Fable compatible (JavaScript and Python).
 
 ## Install

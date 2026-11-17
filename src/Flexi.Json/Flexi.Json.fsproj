@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <PackageId>Flexi.Json</PackageId>
     <RootNamespace>Flexi.Json</RootNamespace>
@@ -22,12 +22,12 @@ Strict RFC 8259 parser (`Parse`, `TryParse`, `TryParseResult`) with line/column 
 Source positions: `ParseWithPositions` / `TryParseWithPositions` return a `Map&lt;string, Span&gt;` keyed by JSON Pointer.
 Compact and pretty printer (`ToString()`, `ToString(true)`).
 `JsonExtensions` accessors (`AsString`, `AsInteger`, `TryGetProperty`, `TryGetPointer`, the `?` operator, ...) and `JsonBuilders` immutable edits.
-Dependency-free, `netstandard2.0` and `net8.0`, Native AOT safe, Fable compatible (JS and Python); the package ships its F# sources under `fable/`.
+Dependency-free, `netstandard2.0` and `net10.0`, Native AOT safe, Fable compatible (JS and Python); the package ships its F# sources under `fable/`.
 Native AOT publish works; the only warnings are FSharp.Core's collapsed IL2104 and IL3053 (dotnet/fsharp#17324), none from this library.
 Tested with the vendored JSON Test Suite and property tests, on .NET and under Fable JS and Python.</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IsAotCompatible>true</IsAotCompatible>
+    <IsAotCompatible Condition="'$(TargetFramework)' != 'netstandard2.0'">true</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\NUGET.md" Pack="true" PackagePath="README.md" Condition="Exists('..\..\NUGET.md')" />

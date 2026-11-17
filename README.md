@@ -7,7 +7,7 @@ A light, flexible, untyped JSON library for F#, in the shape of
 - Strict RFC 8259 parser with line/column errors and a nesting depth limit
 - Source positions: the span of every node, keyed by JSON Pointer
 - Compact and pretty printer
-- Dependency-free (FSharp.Core only), `netstandard2.0` and `net8.0`
+- Dependency-free (FSharp.Core only), `netstandard2.0` and `net10.0`
 - Native AOT safe: no reflection, no `printf`, no regex
 - Fable safe: compiles to JavaScript and Python from the same source (the package ships its F# sources under `fable/`)
 
