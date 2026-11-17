@@ -11,4 +11,12 @@
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <!-- The packed FSharp.Core dependency is this version. It is explicit so it does not follow whichever SDK the
+       CI runner happens to have (0.2.0 accidentally required 11.0.101). The library uses no FSharp.Core feature
+       newer than this; raise it only when the code needs to. Not applied to the test, AotCheck or Fable
+       projects, so they keep resolving their own (higher) versions and avoid NU1605. -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Flexi.Json'">
+    <FSharpCoreImplicitPackageVersion>8.0.403</FSharpCoreImplicitPackageVersion>
+  </PropertyGroup>
+
 </Project>
