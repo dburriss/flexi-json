@@ -33,6 +33,10 @@ doc.ToString(true)        // pretty printed
 let _, spans = JsonValue.ParseWithPositions "{\n  \"a\": [1, 2]\n}"
 spans.["/a/1"].Start      // { Line = 2; Column = 12; Offset = 13 }
 
+// the exact text a number was written as
+let parsed = JsonValue.ParseWithMetadata "[1.10, 1E+2]"
+parsed.NumberText.["/0"]  // "1.10"
+
 // errors carry a position
 match JsonValue.TryParseResult "{\"a\": }" with
 | Error e -> printfn "%s at %d:%d" e.Message e.Pos.Line e.Pos.Column

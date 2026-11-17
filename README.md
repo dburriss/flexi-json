@@ -68,6 +68,23 @@ spans.["/a/1"]   // { Start = { Line = 2; Column = 12; Offset = 13 }; End = { Li
 `Offset` is a 0-based index into the source string, and `End` is exclusive. For duplicate keys the first one owns the
 pointer. `TryParseWithPositions` returns a `Result` instead of raising.
 
+### Original number text
+
+`Integer` / `Float` lose how a number was written (`1.10` becomes `1.1`, `1E+2` becomes `100`, and an integer beyond
+int64 becomes a lossy `Float`). `ParseWithMetadata` also returns the exact source text of every number:
+
+```fsharp
+let parsed = JsonValue.ParseWithMetadata """{"price": 1.10, "big": 12345678901234567890}"""
+parsed.Root                    // the same value Parse returns
+parsed.Spans                   // the same map ParseWithPositions returns
+parsed.NumberText.["/price"]   // "1.10"
+parsed.NumberText.["/big"]     // "12345678901234567890"
+```
+
+`JsonParsed` is `{ Root: JsonValue; Spans: Map<string, Span>; NumberText: Map<string, string> }`. `NumberText` is keyed
+by JSON Pointer and has an entry only for numbers (not strings, booleans or nulls); for duplicate keys the first one
+owns the pointer. `TryParseWithMetadata` returns a `Result` instead of raising.
+
 ### Errors
 
 ```fsharp

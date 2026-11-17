@@ -24,6 +24,12 @@ let main _ =
     check "span for /tags/0" (spans.ContainsKey "/tags/0")
     check "span line" (spans.["/name"].Start.Line = 1)
 
+    // metadata: original number text
+    let parsed = JsonValue.ParseWithMetadata "[1.10,12345678901234567890]"
+    check "number text" (parsed.NumberText.["/0"] = "1.10" && parsed.NumberText.["/1"] = "12345678901234567890")
+    check "metadata spans" (parsed.Spans.ContainsKey "/1")
+    check "try metadata" (match JsonValue.TryParseWithMetadata "[1,]" with Error _ -> true | Ok _ -> false)
+
     // errors, both shapes
     match JsonValue.TryParseResult "{\"a\":}" with
     | Error e -> check "error position" (e.Pos.Line = 1 && e.Message.Length > 0)

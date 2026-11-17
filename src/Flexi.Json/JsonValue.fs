@@ -86,11 +86,40 @@ type JsonValue =
         with :? JsonParseException as e ->
             Error e.Error
 
+    /// Parses and returns the document together with its `Spans` (as `ParseWithPositions`) and the
+    /// original source text of every number (`NumberText`), keyed by JSON Pointer.
+    static member ParseWithMetadata(text: string, ?maxDepth: int) : JsonParsed =
+        let p = JsonParser(text, defaultArg maxDepth JsonValue.DefaultMaxDepth, true)
+        let v = p.ParseDocument()
+        { Root = v; Spans = p.Spans(); NumberText = p.NumberText() }
+
+    /// Like `ParseWithMetadata` but returns `Error` instead of raising.
+    static member TryParseWithMetadata(text: string, ?maxDepth: int) : Result<JsonParsed, JsonParseError> =
+        try
+            Ok(JsonValue.ParseWithMetadata(text, defaultArg maxDepth JsonValue.DefaultMaxDepth))
+        with :? JsonParseException as e ->
+            Error e.Error
+
     /// Compact JSON text.
     override this.ToString() : string = JsonPrinter.Print(this, false)
 
     /// `ToString(true)` is 2-space pretty printed; `ToString(false)` is compact.
     member this.ToString(indent: bool) : string = JsonPrinter.Print(this, indent)
+
+/// The result of `ParseWithMetadata`: the parsed document plus per-node source information, all keyed
+/// by JSON Pointer (RFC 6901; `""` is the root, with `~0`/`~1` escapes).
+and JsonParsed =
+    {
+        /// The parsed document (the same value `Parse` returns).
+        Root: JsonValue
+        /// The source `Span` of every node (the same map `ParseWithPositions` returns).
+        Spans: Map<string, Span>
+        /// The JSON Pointer of every `Integer` / `Float` node mapped to the exact text it was written as
+        /// (`1.10`, `1E+2`, `-0.0`, or an integer beyond int64 that `Root` holds as a lossy `Float`).
+        /// Strings, booleans and nulls have no entry. For duplicate object keys the first occurrence owns
+        /// the pointer, as with `Spans`.
+        NumberText: Map<string, string>
+    }
 
 and [<Sealed>] internal JsonParser(s: string, maxDepth: int, track: bool) =
     let n = s.Length
@@ -98,6 +127,7 @@ and [<Sealed>] internal JsonParser(s: string, maxDepth: int, track: bool) =
     let mutable line = 1
     let mutable lineStart = 0
     let spans = ResizeArray<string * Span>()
+    let numbers = ResizeArray<string * string>()
     let sb = StringBuilder()
 
     let posNow () : Pos = { Line = line; Column = i - lineStart + 1; Offset = i }
@@ -207,7 +237,7 @@ and [<Sealed>] internal JsonParser(s: string, maxDepth: int, track: bool) =
                 i <- i + 1
         sb.ToString()
 
-    let parseNumber () : JsonValue =
+    let parseNumber (ptr: string) : JsonValue =
         let start = i
         let neg = s.[i] = '-'
         if neg then i <- i + 1
@@ -232,6 +262,7 @@ and [<Sealed>] internal JsonParser(s: string, maxDepth: int, track: bool) =
             if i >= n || not (isDigit s.[i]) then raise (err "invalid number: expected digit in exponent")
             while i < n && isDigit s.[i] do i <- i + 1
         let text = s.Substring(start, i - start)
+        if track then numbers.Add((ptr, text))
         let asFloat () =
 #if FABLE_COMPILER
             // Fable's Double.TryParse takes only the text (always invariant); `text` is already validated JSON.
@@ -279,7 +310,7 @@ and [<Sealed>] internal JsonParser(s: string, maxDepth: int, track: bool) =
             | 't' -> literal "true" (JsonValue.Boolean true)
             | 'f' -> literal "false" (JsonValue.Boolean false)
             | 'n' -> literal "null" JsonValue.Null
-            | c when c = '-' || isDigit c -> parseNumber ()
+            | c when c = '-' || isDigit c -> parseNumber ptr
             | c -> raise (err ("unexpected character " + describe c))
         if track then spans.Add((ptr, { Start = start; End = posNow () }))
         v
@@ -329,10 +360,13 @@ and [<Sealed>] internal JsonParser(s: string, maxDepth: int, track: bool) =
                 skipWs ()
                 let childPtr = if track then ptr + "/" + escapePointer key else ""
                 let mark = spans.Count
+                let numMark = numbers.Count
                 let isDuplicate = not (seen.Add key)
                 props.Add((key, parseValue childPtr (depth + 1)))
-                // later duplicates are not addressable by pointer: drop their spans
-                if track && isDuplicate then spans.RemoveRange(mark, spans.Count - mark)
+                // later duplicates are not addressable by pointer: drop their spans and number texts
+                if track && isDuplicate then
+                    spans.RemoveRange(mark, spans.Count - mark)
+                    numbers.RemoveRange(numMark, numbers.Count - numMark)
                 skipWs ()
                 if i >= n then raise (err "unterminated object")
                 match s.[i] with
@@ -357,6 +391,12 @@ and [<Sealed>] internal JsonParser(s: string, maxDepth: int, track: bool) =
     member _.Spans() : Map<string, Span> =
         let mutable m = Map.empty
         for (k, v) in spans do
+            if not (Map.containsKey k m) then m <- Map.add k v m
+        m
+
+    member _.NumberText() : Map<string, string> =
+        let mutable m = Map.empty
+        for (k, v) in numbers do
             if not (Map.containsKey k m) then m <- Map.add k v m
         m
 
